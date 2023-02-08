@@ -1,0 +1,28 @@
+extends ../partials/head.pug
+block content
+  .add-location-content#add-location-content
+    .close-window-button#close-window-button
+      i(class="fa-solid fa-close")
+    .create-form-title Konum bilgilerini giriniz!
+    form(action="/add_location" method="post" enctype="application/x-www-form-urlencoded" autocomplete="off") 
+      label.each-form-label Enkaz altındaki konumun koordinatını giriniz
+      .get-coordinates-button#get-coordinates-button Bulunduğum yerin konumun al
+      label.each-form-label(for="latitude") Enlem
+      input(type="number" id="latitude" name="latitude" placeholder="örneğin: 36.75" required step="0.01")
+      label(for="longitude") Boylam
+      input(type="number" id="longitude" name="longitude" placeholder="örneğin: 27.32" required step="0.01")
+      label(for="total_victims") Tahmini depremzede sayısı
+      input(type="number" id="total_victims" name="total_victims" placeholder="5-10" required)
+      label(for="address") Tam Adres Girin
+      textarea(id="address" name="address", cols="30", rows="5" required)
+      input.submit-button(type="submit", value="Ekle")
+
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.8.0/leaflet.js")
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.8.0/leaflet.css")
+  link(href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel='stylesheet')
+  script(src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js")
+  script(src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.17/leaflet-maplibre-gl.js")
+  .all-inner-wrapper
+    div(class="menu" id="menu")
+      .menu-item#add-button Enkaz konumu ekle +
+    div(id="map" style="height: 100%; width: 100%;")
