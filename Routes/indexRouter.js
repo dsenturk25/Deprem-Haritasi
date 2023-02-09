@@ -5,6 +5,7 @@ const router = express.Router();
 const indexGetController = require("../controllers/index/index/get");
 const addLocationPostController = require("../controllers/index/addLocation/post")
 const locationGetController = require("../controllers/index/getLocations/get");
+const confirmLocationPostController = require("../controllers/index/confirmLocation/post");
 
 router.get(
   "/",
@@ -19,6 +20,11 @@ router.get(
 router.post(
   "/add_location",
   addLocationPostController
+)
+
+router.post(
+  "/confirm_location",
+  confirmLocationPostController
 )
 
 

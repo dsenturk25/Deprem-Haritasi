@@ -20,6 +20,11 @@ const locationSchema = mongoose.Schema({
     type: Number,
     required: true
   },
+  confirmations: {
+    type: Number,
+    required: true,
+    default: 0
+  }
 })
 
 locationSchema.statics.createLocation = function (body, callback) {
@@ -30,6 +35,17 @@ locationSchema.statics.createLocation = function (body, callback) {
     return callback(null, newLocation);
   }
   return callback("bad_request");
+}
+
+locationSchema.statics.confirmLocation = function (body, callback) {
+  Location.findById(body._id, (err, location) => {
+
+    location.confirmations += 1;
+    location.save();
+
+    if (err) return callback("bad_request", null);
+    return callback(null, location);
+  })
 }
 
 const Location = mongoose.model("Locations", locationSchema);

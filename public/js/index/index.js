@@ -18,22 +18,22 @@ function initMap() {
       for (let i = 0; i < res.length; i++) {
         const location = res[i];
         const marker = L.marker([location.latitude, location.longitude]).addTo(map);
-        marker.bindPopup(`Enkazın adresi: ${location.address} \n` + ` Tahmini depremzede sayısı: ${location.total_victims}`)
-        if (location.total_victims > 0 && location.total_victims <= 3) {
+        marker.bindPopup(`<div style="display:none">${location._id}</div><div>Enkazın adresi: ${location.address}</div> <div>Tahmini depremzede sayısı: ${location.total_victims}</div> <div>Doğrulanma sayısı: ${location.confirmations}<div/> <button class="confirm-button">Bu konumu doğrula</button>`)
+        if (location.total_victims > 0 && location.total_victims <= 5) {
           L.circle([location.latitude, location.longitude], {
             color: 'yellow',
             fillColor: 'yellow',
             fillOpacity: 0.8,
             radius: 2000
           }).addTo(map);
-        } else if (location.total_victims > 3 && location.total_victims <= 7) {
+        } else if (location.total_victims > 5 && location.total_victims <= 10) {
           L.circle([location.latitude, location.longitude], {
             color: 'orange',
             fillColor: 'orange',
             fillOpacity: 0.8,
             radius: 2000
           }).addTo(map);
-        } else if (location.total_victims > 7) {
+        } else if (location.total_victims > 10) {
           L.circle([location.latitude, location.longitude], {
             color: 'red',
             fillColor: 'red',
@@ -64,6 +64,7 @@ function showPosition(position) {
 }
 
 window.onload = () => {
+
   initMap();
 
   const addButton = document.getElementById("add-button");
@@ -86,4 +87,43 @@ window.onload = () => {
     getLocation();
   })
 
+  document.addEventListener("click", (event) => {
+
+    if (event.target.classList.contains("confirm-button")) {
+
+      const id = event.target.parentNode.parentNode.parentNode.children[0].innerHTML
+      if (getLocalBoolean(`location_${id}`)) {
+        alert("Bu konumu çoktan doğruladınız.");
+        return;
+      } else {
+
+        var xhr = new XMLHttpRequest();
+        var res = [];
+        xhr.open("POST", "/confirm_location", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+          if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            setLocalBoolean(`location_${id}`, true)
+            alert("Konum doğrulandı");
+            window.location.reload();
+          }
+        }
+        const data = {
+          _id: id
+        }
+        xhr.send(JSON.stringify(data));
+      }
+    }
+  })
 }
+
+function setLocalBoolean(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+// Retrieve the value from local storage
+function getLocalBoolean(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
+

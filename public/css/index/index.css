@@ -159,3 +159,13 @@ textarea {
     margin-bottom: 20px;
   }
 }
+
+.confirm-button {
+  padding: 5px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: green;
+  cursor: pointer;
+}
